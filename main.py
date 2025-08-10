@@ -1,4 +1,5 @@
 import pygame as pg
+import random
 
 pg.init()
 
@@ -20,6 +21,11 @@ move_time = 5
 window = pg.display.set_mode((800, 800))
 
 snake_head = pg.Rect(snake_x_pos, snake_y_pos, CELL_SIZE, CELL_SIZE)
+apple = pg.Rect(
+  random.randint(0, MAX_CELLS) * CELL_SIZE,
+  random.randint(0, MAX_CELLS) * CELL_SIZE,
+  CELL_SIZE, CELL_SIZE
+)
 
 def draw_grid():
   current_cell_color = (0, 0, 0)
@@ -63,5 +69,6 @@ while is_running:
   # draw game
   draw_grid()
   pg.draw.rect(window, (255, 255, 255), snake_head)
+  pg.draw.rect(window, (255, 0, 0), apple)
 
   pg.display.flip()
