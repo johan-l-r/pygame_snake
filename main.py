@@ -48,7 +48,6 @@ while is_running:
       is_running = False
     if event.type == pg.KEYDOWN:
       if (event.key == pg.K_w or event.key == pg.K_UP) and movement_direction[1] != 1:
-        print("false")
         movement_direction = [0, -1]
       if (event.key == pg.K_s or event.key == pg.K_DOWN) and movement_direction[1] != -1:
         movement_direction = [0, 1]
@@ -65,6 +64,11 @@ while is_running:
     snake_head.y += int(movement_direction[1] * CELL_SIZE)
 
     move_timer = 0
+
+  if snake_head.colliderect(apple):
+    move_time -= 0.01
+    apple.x = int(random.randint(0, MAX_CELLS - 1) * CELL_SIZE)
+    apple.y = int(random.randint(0, MAX_CELLS - 1) * CELL_SIZE)
 
   # draw game
   draw_grid()
