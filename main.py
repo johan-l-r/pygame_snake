@@ -41,13 +41,13 @@ while is_running:
     if event.type == pg.QUIT:
       is_running = False
     if event.type == pg.KEYDOWN:
-      if event.key == pg.K_w or event.key == pg.K_UP:
+      if event.key == pg.K_w or event.key == pg.K_UP and movement_direction[1] != 1:
         movement_direction = [0, -1]
-      if event.key == pg.K_s or event.key == pg.K_DOWN:
+      if event.key == pg.K_s or event.key == pg.K_DOWN and movement_direction[1] != -1:
         movement_direction = [0, 1]
-      if event.key == pg.K_a or event.key == pg.K_LEFT:
+      if event.key == pg.K_a or event.key == pg.K_LEFT and movement_direction[0] != 1:
         movement_direction = [-1, 0]
-      if event.key == pg.K_d or event.key == pg.K_RIGHT:
+      if event.key == pg.K_d or event.key == pg.K_RIGHT and movement_direction[0] != -1:
         movement_direction = [1, 0]
 
   # update game
