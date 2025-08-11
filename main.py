@@ -5,20 +5,28 @@ pg.init()
 
 is_running = True
 
-WINDOW_SIZE = 800 # 800x800
-MAX_CELLS = 25
-CELL_SIZE = WINDOW_SIZE / MAX_CELLS
+WINDOW_WIDTH = 800
+WINDOW_HEIGHT = 896
 
-# [0] = x [1] = y
-movement_direction = [1, 0]
+SCORE_BAR_WIDTH = WINDOW_WIDTH
+SCORE_BAR_HEIGHT = 96
+
+GRID_SIZE = WINDOW_WIDTH
+
+MAX_CELLS = 25
+CELL_SIZE = GRID_SIZE / MAX_CELLS
 
 snake_x_pos = 12 * CELL_SIZE
 snake_y_pos = 12 * CELL_SIZE
 
+score = 0
 move_timer = 0
 move_time = 5
 
-window = pg.display.set_mode((800, 800))
+# [0] = x [1] = y
+movement_direction = [1, 0]
+
+window = pg.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
 
 snake_head = pg.Rect(snake_x_pos, snake_y_pos, CELL_SIZE, CELL_SIZE)
 apple = pg.Rect(
@@ -27,12 +35,17 @@ apple = pg.Rect(
   CELL_SIZE, CELL_SIZE
 )
 
+font = pg.font.Font("./assets/fonts/Pixeled.ttf", 30)
+font_surface = font.render("Score: " + str(score), True, (255, 255, 255))
+
+score_surface = pg.Surface((SCORE_BAR_WIDTH, SCORE_BAR_HEIGHT))
+
 def draw_grid():
   current_cell_color = (0, 0, 0)
 
   for row in range(MAX_CELLS):
     for col in range(MAX_CELLS):
-      cell = pg.Rect(row * CELL_SIZE, col * CELL_SIZE, CELL_SIZE, CELL_SIZE)
+      cell = pg.Rect(row * CELL_SIZE, SCORE_BAR_HEIGHT + col * CELL_SIZE, CELL_SIZE, CELL_SIZE)
 
       # create chess board pattern
       if (row + col) % 2 == 0:
@@ -56,6 +69,8 @@ while is_running:
       if (event.key == pg.K_d or event.key == pg.K_RIGHT) and movement_direction[0] != -1:
         movement_direction = [1, 0]
 
+  window.fill((0, 0, 0))
+
   # update game
   move_timer += 0.1
 
@@ -67,12 +82,23 @@ while is_running:
 
   if snake_head.colliderect(apple):
     move_time -= 0.01
+
     apple.x = int(random.randint(0, MAX_CELLS - 1) * CELL_SIZE)
     apple.y = int(random.randint(0, MAX_CELLS - 1) * CELL_SIZE)
+
+    score += 1
+
+    score_surface.fill((0, 0, 0))
+    font_surface = font.render("Score: " + str(score), True, (255, 255, 255))
 
   # draw game
   draw_grid()
   pg.draw.rect(window, (255, 255, 255), snake_head)
   pg.draw.rect(window, (255, 0, 0), apple)
+  window.blit(score_surface, (0, 0))
+  score_surface.blit(font_surface, (
+    (score_surface.get_rect().width - font_surface.get_rect().width) / 2,
+    (score_surface.get_rect().height - font_surface.get_rect().height) / 2
+  ))
 
   pg.display.flip()
