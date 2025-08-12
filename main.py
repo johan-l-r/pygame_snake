@@ -92,7 +92,7 @@ while is_running:
     move_time -= 0.01
 
     apple.x = int(random.randint(0, MAX_CELLS - 1) * CELL_SIZE)
-    apple.y = int(random.randint(0, MAX_CELLS - 1) * CELL_SIZE)
+    apple.y = int(random.randint(3, MAX_CELLS) * CELL_SIZE)
 
     score += 1
     snake_body.insert(0, pg.Rect(snake_body[-1].x, snake_body[-1].y, CELL_SIZE, CELL_SIZE))
