@@ -29,6 +29,9 @@ movement_direction = [1, 0]
 window = pg.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
 
 snake_head = pg.Rect(snake_x_pos, snake_y_pos, CELL_SIZE, CELL_SIZE)
+
+snake_body = [snake_head]
+
 apple = pg.Rect(
   random.randint(0, MAX_CELLS) * CELL_SIZE,
   random.randint(0, MAX_CELLS) * CELL_SIZE,
@@ -75,11 +78,16 @@ while is_running:
   move_timer += 0.1
 
   if move_timer >= move_time:
+    for i in range(0, len(snake_body) - 1, 1):
+      snake_body[i].x = snake_body[i + 1].x
+      snake_body[i].y = snake_body[i + 1].y
+
     snake_head.x += int(movement_direction[0] * CELL_SIZE)
     snake_head.y += int(movement_direction[1] * CELL_SIZE)
 
     move_timer = 0
 
+  # apple collision
   if snake_head.colliderect(apple):
     move_time -= 0.01
 
@@ -87,13 +95,16 @@ while is_running:
     apple.y = int(random.randint(0, MAX_CELLS - 1) * CELL_SIZE)
 
     score += 1
+    snake_body.insert(0, pg.Rect(snake_body[-1].x, snake_body[-1].y, CELL_SIZE, CELL_SIZE))
 
     score_surface.fill((0, 0, 0))
     font_surface = font.render("Score: " + str(score), True, (255, 255, 255))
 
   # draw game
   draw_grid()
-  pg.draw.rect(window, (255, 255, 255), snake_head)
+  for part in snake_body:
+    pg.draw.rect(window, (255, 255, 255), part)
+
   pg.draw.rect(window, (255, 0, 0), apple)
   window.blit(score_surface, (0, 0))
   score_surface.blit(font_surface, (
