@@ -34,7 +34,7 @@ snake_body = [snake_head]
 
 apple = pg.Rect(
   random.randint(0, MAX_CELLS) * CELL_SIZE,
-  random.randint(0, MAX_CELLS) * CELL_SIZE,
+  random.randint(3, MAX_CELLS) * CELL_SIZE,
   CELL_SIZE, CELL_SIZE
 )
 
@@ -92,13 +92,25 @@ while is_running:
     move_time -= 0.01
 
     apple.x = int(random.randint(0, MAX_CELLS - 1) * CELL_SIZE)
-    apple.y = int(random.randint(3, MAX_CELLS) * CELL_SIZE)
+    apple.y = int(random.randint(3, MAX_CELLS - 1) * CELL_SIZE)
 
     score += 1
     snake_body.insert(0, pg.Rect(snake_body[-1].x, snake_body[-1].y, CELL_SIZE, CELL_SIZE))
 
     score_surface.fill((0, 0, 0))
     font_surface = font.render("Score: " + str(score), True, (255, 255, 255))
+
+  # prevent the snake to go out of screen
+  if snake_head.x > WINDOW_WIDTH - CELL_SIZE or snake_head.x < 0 or snake_head.y > WINDOW_HEIGHT - CELL_SIZE or snake_head.y < SCORE_BAR_HEIGHT:
+    score = 0
+    snake_body = [snake_body[-1]]
+
+    font_surface = font.render("Score: " + str(score), True, (255, 255, 255))
+
+    snake_head.x = int(12 * CELL_SIZE)
+    snake_head.y = int(12 * CELL_SIZE)
+
+    score_surface.fill((0, 0, 0))
 
   # draw game
   draw_grid()
@@ -107,6 +119,7 @@ while is_running:
 
   pg.draw.rect(window, (255, 0, 0), apple)
   window.blit(score_surface, (0, 0))
+
   score_surface.blit(font_surface, (
     (score_surface.get_rect().width - font_surface.get_rect().width) / 2,
     (score_surface.get_rect().height - font_surface.get_rect().height) / 2
